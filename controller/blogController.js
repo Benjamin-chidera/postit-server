@@ -9,6 +9,12 @@ export const getAllBlog = tryCatch(async (req, res) => {
   res.status(200).json({ msg: "success", NumOfPosts: blog.length, blog });
 });
 
+export const getRecentPosts = tryCatch(async (req, res) => {
+  const recent = await Blog.find().sort("-createdAt").limit(3);
+
+  res.status(200).json({ msg: " successful", recent });
+});
+
 export const createPost = tryCatch(async (req, res) => {
   const { title, tags, description, author } = req.body;
 
@@ -109,12 +115,4 @@ export const updatePost = tryCatch(async (req, res) => {
   });
 
   res.status(200).json({ msg: "Post updated successfully", post });
-});
-
-export const getRecentPosts = tryCatch(async (req, res) => {
-  const recent = await Blog.find()
-    .sort("-createdAt")
-    .limit(3)
-    .res.status(200)
-    .json({ msg: " successful", recent });
 });

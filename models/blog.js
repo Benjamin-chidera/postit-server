@@ -32,8 +32,8 @@ const blogSchema = new Schema(
 
     author: {
       type: mongoose.Types.ObjectId,
-      required: true,
       ref: "User",
+      required: true,
     },
   },
   { timestamps: true }
