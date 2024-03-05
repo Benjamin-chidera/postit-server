@@ -4,7 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
 export const getAllBlog = tryCatch(async (req, res) => {
-  const blog = await Blog.find();
+  const blog = await Blog.find().sort("-createdAt");
 
   res.status(200).json({ msg: "success", NumOfPosts: blog.length, blog });
 });
@@ -112,6 +112,9 @@ export const updatePost = tryCatch(async (req, res) => {
 });
 
 export const getRecentPosts = tryCatch(async (req, res) => {
-  const recent = await Blog.find().sort("-createdAt").limit(3);
-  res.status(200).json({ msg: "Recent posts", recent });
+  const recent = await Blog.find()
+    .sort("-createdAt")
+    .limit(3)
+    .res.status(200)
+    .json({ msg: " successful", recent });
 });
