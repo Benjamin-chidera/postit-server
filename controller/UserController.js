@@ -42,6 +42,7 @@ export const registerUser = tryCatch(async (req, res) => {
     user: {
       name: user.name,
       email: user.email,
+      image: user.image,
     },
   });
 });
@@ -66,7 +67,7 @@ export const loginUser = tryCatch(async (req, res) => {
   }
 
   const token = jwt.sign(
-    { userId: user._id, name: user.name },
+    { userId: user._id, name: user.name, image: user.image},
     process.env.TOKEN,
     {
       expiresIn: "2d",
