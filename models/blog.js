@@ -10,6 +10,7 @@ const blogSchema = new Schema(
     tags: {
       type: String,
       required: true,
+      
       enum: [
         "technology",
         "nature",

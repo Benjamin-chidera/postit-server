@@ -30,16 +30,6 @@ app.get("/", (req, res) => {
   res.json("home page");
 });
 
-// const server = async (req, res, next) => {
-//   try {
-//     await mongoose.connect(process.env.MONGO, { dbName: "POSTIT-SERVER" });
-//     app.listen(PORT, () => {
-//       console.log(" listening on port " + PORT);
-//     });
-//   } catch (error) {
-//     next(error)
-//   }
-// };
 
 const server = tryCatch(async (req, res) => {
   await mongoose.connect(process.env.MONGO, { dbName: "POSTIT-SERVER" });

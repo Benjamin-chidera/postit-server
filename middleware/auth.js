@@ -15,7 +15,7 @@ export const auth = async (req, res, next) => {
     req.user = {
       userId: payload.userId,
       name: payload.name,
-      image: payload.image
+      image: payload.image,
     };
 
     next();

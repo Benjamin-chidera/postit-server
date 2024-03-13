@@ -54,17 +54,17 @@ export const getAPost = tryCatch(async (req, res) => {
   res.status(200).json({ msg: "success", post });
 });
 
-// export const getPostByAuthorId = tryCatch(async (req, res) => {
-//   const { authorId } = req.params;
+export const getPostByAuthorId = tryCatch(async (req, res) => {
+  const { authorId } = req.params;
 
-//   const authors = await Blog.find({ author: authorId });
+  const authors = await Blog.find({ author: authorId });
 
-//   if (!authors) {
-//     throw new Error(`Could not find post ${authorId}`);
-//   }
+  if (!authors) {
+    throw new Error(`Could not find post ${authorId}`);
+  }
 
-//   res.status(200).json({ msg: "Author posts", authors});
-// });
+  res.status(200).json({ msg: "Author posts", authors});
+});
 
 export const deletePost = tryCatch(async (req, res) => {
   const { blogId } = req.params;
@@ -92,7 +92,7 @@ export const updatePost = tryCatch(async (req, res) => {
   const { blogId } = req.params;
   const { title, tags, description } = req.body;
 
-  const image = req.files.image ? req.files.image.tempFilePath : undefined;
+  // const image = req.files.image ? req.files.image.tempFilePath : null;
 
   let updatedPost = {};
 
@@ -100,7 +100,7 @@ export const updatePost = tryCatch(async (req, res) => {
   if (description) updatedPost.description = description;
   if (tags) updatedPost.tags = tags;
 
-  if (image) {
+  if (req.files && req.files.image) {
     const imageResult = await cloudinary.uploader.upload(image, {
       use_filename: true,
       folder: "Postit",
