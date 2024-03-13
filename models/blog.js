@@ -10,7 +10,7 @@ const blogSchema = new Schema(
     tags: {
       type: String,
       required: true,
-      
+
       enum: [
         "technology",
         "nature",
@@ -19,6 +19,13 @@ const blogSchema = new Schema(
         "education",
         "politics",
       ],
+    },
+
+    blogStatus: {
+      type: String,
+      required: true,
+      enum: ["published", "draft"],
+      default: "published",
     },
 
     image: {

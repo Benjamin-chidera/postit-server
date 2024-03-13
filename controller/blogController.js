@@ -16,7 +16,7 @@ export const getRecentPosts = tryCatch(async (req, res) => {
 });
 
 export const createPost = tryCatch(async (req, res) => {
-  const { title, tags, description, author } = req.body;
+  const { title, tags, description, author, blogStatus } = req.body;
 
   const { userId } = req.user;
 
@@ -38,6 +38,7 @@ export const createPost = tryCatch(async (req, res) => {
     description,
     author: userId,
     image: imageResult.secure_url,
+    blogStatus,
   });
 
   res.status(201).json({ msg: "success", post });
@@ -63,7 +64,9 @@ export const getPostByAuthorId = tryCatch(async (req, res) => {
     throw new Error(`Could not find post ${authorId}`);
   }
 
-  res.status(200).json({ msg: "Author posts", authors});
+  res
+    .status(200)
+    .json({ msg: "Author posts", NumOfPosts: authors.length, authors });
 });
 
 export const deletePost = tryCatch(async (req, res) => {
