@@ -58,7 +58,7 @@ export const getAPost = tryCatch(async (req, res) => {
 export const getPostByAuthorId = tryCatch(async (req, res) => {
   const { authorId } = req.params;
 
-  const authors = await Blog.find({ author: authorId });
+  const authors = await Blog.find({ author: authorId }).sort("-createdAt");
 
   if (!authors) {
     throw new Error(`Could not find post ${authorId}`);
