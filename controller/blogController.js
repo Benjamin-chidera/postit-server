@@ -95,7 +95,7 @@ export const updatePost = tryCatch(async (req, res) => {
   const { blogId } = req.params;
   const { title, tags, description } = req.body;
 
-  // const image = req.files.image ? req.files.image.tempFilePath : null;
+  const image = req.files.image ? req.files.image.tempFilePath : null;
 
   let updatedPost = {};
 

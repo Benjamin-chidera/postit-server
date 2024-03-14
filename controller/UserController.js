@@ -67,7 +67,7 @@ export const loginUser = tryCatch(async (req, res) => {
   }
 
   const token = jwt.sign(
-    { userId: user._id, name: user.name, image: user.image},
+    { userId: user._id, name: user.name, image: user.image },
     process.env.TOKEN,
     {
       expiresIn: "2d",
@@ -77,10 +77,17 @@ export const loginUser = tryCatch(async (req, res) => {
   res.status(200).json({
     msg: "success",
     user: {
+      userId: user.id,
       name: user.name,
       email: user.email,
       userImage: user.image,
       token,
     },
   });
+});
+
+export const getUser = tryCatch(async (req, res) => {
+  const user = await User.find();
+
+  res.status(200).json({ msg: "User found", user });
 });
