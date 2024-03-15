@@ -7,6 +7,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { tryCatch } from "./utils/tryCatch.js";
 import UserRouter from "./router/userRouter.js";
 import BlogRouter from "./router/blogRouter.js";
+import CommentRouter from "./router/commentRouter.js" 
 import { v2 as cloudinary } from "cloudinary";
 dotenv.config();
 const app = express();
@@ -25,6 +26,7 @@ app.use(cors());
 
 app.use("/api/v1/user", UserRouter);
 app.use("/api/v1/posts", BlogRouter);
+app.use("/api/v1/posts", CommentRouter);
 
 app.get("/", (req, res) => {
   res.json("home page");

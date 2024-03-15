@@ -4,7 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
 export const getAllBlog = tryCatch(async (req, res) => {
-  const blog = await Blog.find().sort("-createdAt");
+  const blog = await Blog.find().sort("-createdAt").populate("comments");
 
   res.status(200).json({ msg: "success", NumOfPosts: blog.length, blog });
 });

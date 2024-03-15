@@ -91,3 +91,11 @@ export const getUser = tryCatch(async (req, res) => {
 
   res.status(200).json({ msg: "User found", user });
 });
+
+export const getAUser = tryCatch(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById({ _id: userId });
+
+  res.status(200).json({ msg: "User found", user });
+});
