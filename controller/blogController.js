@@ -94,7 +94,7 @@ export const deletePost = tryCatch(async (req, res) => {
 
 export const updatePost = tryCatch(async (req, res) => {
   const { blogId } = req.params;
-  const { title, tags, description } = req.body;
+  const { title, tags, description,name } = req.body;
 
   const image =
     req.files && req.files.image ? req.files.image.tempFilePath : null;
@@ -104,6 +104,7 @@ export const updatePost = tryCatch(async (req, res) => {
   if (title) updatedPost.title = title;
   if (description) updatedPost.description = description;
   if (tags) updatedPost.tags = tags;
+  if (name) updatedPost.name = name;
 
   if (image) {
     try {
