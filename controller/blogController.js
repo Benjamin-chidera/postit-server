@@ -48,7 +48,7 @@ export const createPost = tryCatch(async (req, res) => {
 
 export const getAPost = tryCatch(async (req, res) => {
   const { blogId } = req.params;
-  const post = await Blog.findById({ _id: blogId }).populate("author")
+  const post = await Blog.findById({ _id: blogId }).populate("author");
 
   if (!post) {
     throw new Error(`Could not find post ${blogId}`);
@@ -136,5 +136,5 @@ export const updatePost = tryCatch(async (req, res) => {
 export const getPostsByUser = tryCatch(async (req, res) => {
   const { userId } = req.user;
   const posts = await Blog.find({ author: userId }).populate("author", "name");
-  res.status(200).json({ posts });
+  res.status(200).json({ success: true, authorsPosts: posts });
 });
