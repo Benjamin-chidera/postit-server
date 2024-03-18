@@ -4,7 +4,10 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
 export const getAllBlog = tryCatch(async (req, res) => {
-  const blog = await Blog.find().sort("-createdAt").populate("comments");
+  const blog = await Blog.find()
+    .sort("-createdAt")
+    .populate("comments")
+    .populate("author");
 
   res.status(200).json({ msg: "success", NumOfPosts: blog.length, blog });
 });
@@ -16,11 +19,10 @@ export const getRecentPosts = tryCatch(async (req, res) => {
 });
 
 export const createPost = tryCatch(async (req, res) => {
-  const { title, tags, description, author, blogStatus, name } = req.body;
+  const { title, tags, description, blogStatus } = req.body;
+  console.log(req.user);
 
   const { userId } = req.user;
-
-  req.user.author = userId;
 
   const imageResult = await cloudinary.uploader.upload(
     req.files.image.tempFilePath,
@@ -39,7 +41,6 @@ export const createPost = tryCatch(async (req, res) => {
     author: userId,
     image: imageResult.secure_url,
     blogStatus,
-    name,
   });
 
   res.status(201).json({ msg: "success", post });
@@ -94,7 +95,7 @@ export const deletePost = tryCatch(async (req, res) => {
 
 export const updatePost = tryCatch(async (req, res) => {
   const { blogId } = req.params;
-  const { title, tags, description,name } = req.body;
+  const { title, tags, description, name } = req.body;
 
   const image =
     req.files && req.files.image ? req.files.image.tempFilePath : null;
@@ -134,9 +135,6 @@ export const updatePost = tryCatch(async (req, res) => {
 
 export const getPostsByUser = tryCatch(async (req, res) => {
   const { userId } = req.user;
-  const posts = await Blog.findById({ author: userId }).populate(
-    "author",
-    "name"
-  );
-  res.status(200).json({ posts, message: "true" });
+  const posts = await Blog.find({ author: userId }).populate("author", "name");
+  res.status(200).json({ posts });
 });

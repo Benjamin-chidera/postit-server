@@ -2,11 +2,6 @@ import mongoose, { Schema, Types } from "mongoose";
 
 const blogSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-
     title: {
       type: String,
       required: true,
