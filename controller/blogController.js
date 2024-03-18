@@ -16,7 +16,7 @@ export const getRecentPosts = tryCatch(async (req, res) => {
 });
 
 export const createPost = tryCatch(async (req, res) => {
-  const { title, tags, description, author, blogStatus } = req.body;
+  const { title, tags, description, author, blogStatus, name } = req.body;
 
   const { userId } = req.user;
 
@@ -39,6 +39,7 @@ export const createPost = tryCatch(async (req, res) => {
     author: userId,
     image: imageResult.secure_url,
     blogStatus,
+    name,
   });
 
   res.status(201).json({ msg: "success", post });
@@ -95,7 +96,8 @@ export const updatePost = tryCatch(async (req, res) => {
   const { blogId } = req.params;
   const { title, tags, description } = req.body;
 
-  const image = req.files.image ? req.files.image.tempFilePath : null;
+  const image =
+    req.files && req.files.image ? req.files.image.tempFilePath : null;
 
   let updatedPost = {};
 
@@ -103,19 +105,37 @@ export const updatePost = tryCatch(async (req, res) => {
   if (description) updatedPost.description = description;
   if (tags) updatedPost.tags = tags;
 
-  if (req.files && req.files.image) {
-    const imageResult = await cloudinary.uploader.upload(image, {
-      use_filename: true,
-      folder: "Postit",
-    });
-    fs.unlinkSync(req.files.image.tempFilePath);
-    updatedPost.image = imageResult.secure_url;
+  if (image) {
+    try {
+      const imageResult = await cloudinary.uploader.upload(image, {
+        use_filename: true,
+        folder: "Postit",
+      });
+      fs.unlinkSync(req.files.image.tempFilePath);
+      updatedPost.image = imageResult.secure_url;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      // Handle upload error (e.g., send error response)
+    }
   }
 
-  const post = await Blog.findByIdAndUpdate({ _id: blogId }, updatedPost, {
-    new: true,
-    runValidators: true,
-  });
+  try {
+    const post = await Blog.findByIdAndUpdate({ _id: blogId }, updatedPost, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({ msg: "Post updated successfully", post });
+  } catch (error) {
+    console.error("Error updating post:", error);
+    // Handle update error (e.g., send error response with details)
+  }
+});
 
-  res.status(200).json({ msg: "Post updated successfully", post });
+export const getPostsByUser = tryCatch(async (req, res) => {
+  const { userId } = req.user;
+  const posts = await Blog.findById({ author: userId }).populate(
+    "author",
+    "name"
+  );
+  res.status(200).json({ posts, message: "true" });
 });
