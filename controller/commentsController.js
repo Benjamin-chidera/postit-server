@@ -7,11 +7,16 @@ export const createComment = tryCatch(async (req, res) => {
   const { comments, author } = req.body;
   const { userId } = req.user;
 
-  console.log(blogId, comments, author);
-
-  req.body.author = userId;
-
   try {
+    const existingComments = await Comment.findOne({
+      blog: blogId,
+      author: userId,
+    });
+
+    if (existingComments) {
+      return res.status(404).json({ msg: "user already commented" });
+    }
+
     const blog = await Blog.findById(blogId);
 
     if (!blog) {
@@ -39,7 +44,13 @@ export const createComment = tryCatch(async (req, res) => {
 export const getComment = tryCatch(async (req, res) => {
   const { blogId } = req.params;
 
-  const blog = await Blog.findById(blogId).populate("comments");
+  const blog = await Blog.findById(blogId).populate({
+    path: "comments",
+    populate: {
+      path: "author",
+      select: "name image",
+    },
+  });
 
   if (!blog) {
     return res.status(404).json({ error: "Blog post not found" });

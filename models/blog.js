@@ -48,6 +48,7 @@ const blogSchema = new Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment",
+        unique: true,
       },
     ],
   },
