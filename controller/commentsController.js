@@ -59,13 +59,47 @@ export const getComment = tryCatch(async (req, res) => {
   res.status(200).json({ msg: "Blog post found", blog: blog.comments });
 });
 
+// export const deleteComment = tryCatch(async (req, res) => {
+
+
+//   const { commentId } = req.params;
+
+//   const comment = await Comment.findById(commentId);
+
+//   if (!comment) {
+//     return res.status(404).json({ error: "Blog post not found" });
+//   }
+
+//   const blog = await Blog.findById(comment.blog);
+
+//   if (!blog) {
+//     return res.status(404).json({ error: "Blog post not found" });
+//   }
+
+//   blog.comments.pull(commentId);
+//   await blog.save();
+
+//   await Comment.findByIdAndDelete(commentId);
+
+//   res.status(200).json({ message: "Comment deleted successfully" });
+// });
+
+
 export const deleteComment = tryCatch(async (req, res) => {
   const { commentId } = req.params;
+  const { userId } = req.user;
 
   const comment = await Comment.findById(commentId);
 
   if (!comment) {
-    return res.status(404).json({ error: "Blog post not found" });
+    return res.status(404).json({ error: "Comment not found" });
+  }
+
+  // Check if the requesting user is the author of the comment
+  if (comment.author.toString() !== userId) {
+    return res
+      .status(401)
+      .json({ error: "Unauthorized to delete this comment" });
   }
 
   const blog = await Blog.findById(comment.blog);
@@ -81,6 +115,7 @@ export const deleteComment = tryCatch(async (req, res) => {
 
   res.status(200).json({ message: "Comment deleted successfully" });
 });
+
 
 export const editComment = tryCatch(async (req, res) => {
   const { commentId } = req.params;
