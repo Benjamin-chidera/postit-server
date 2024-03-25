@@ -13,7 +13,7 @@ router.post("/:blogId/comments", auth, createComment);
 router.get("/:blogId/comments", auth, getComment);
 router
   .route("/comments/:commentId")
-  .delete(deleteComment)
+  .delete(auth, deleteComment)
   .patch(editComment)
   .get(getAComment);
 
